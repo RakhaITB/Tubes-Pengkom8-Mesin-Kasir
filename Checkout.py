@@ -14,7 +14,7 @@ class Checkout:
     def hitung_bayaran(self):
         bayaran_total = 0
         for produk in self.keranjang:
-            bayaran_total += produk["harga"]
+            bayaran_total += produk["harga"] * produk["jumlah"]
         self.sisa_bayaran += bayaran_total
         return self.sisa_bayaran
 
@@ -29,6 +29,7 @@ class Checkout:
         sisa_yang_harus_dibayar = True
         total_yang_harus_dibayar = jumlah_yang_harus_dibayar
 
+        print("Total: " + str(total_yang_harus_dibayar))
         while sisa_yang_harus_dibayar:
             try:
                 terbayar = float(input("\nMasukkan jumlah yang akan dibayar: "))
@@ -59,7 +60,8 @@ class Checkout:
         print("Kasir: " + self.kasir + "\n")
 
         for benda in self.keranjang:
-            print(benda["nama"], " Rp" + str(benda["harga"]))
+            print(benda["nama"] + " (jumlah: " + str(benda["jumlah"]) + ")",
+                  "Rp" + str(benda["harga"] * benda["jumlah"]))
 
         print("\n")
         print("TOTAL:", "          Rp" + str(self.sisa_bayaran))
