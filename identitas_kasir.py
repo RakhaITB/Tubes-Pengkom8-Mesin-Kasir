@@ -27,7 +27,7 @@ class IdentitasKasir:
         }
     ]
 
-    def __init__(self, nama, nomor):
+    def __init__(self, nama, nomor):  # inisiasi kelas kasir dimulai dengan properti nama dan nomor kasir
         self.nama = nama
         self.nomor = nomor
 
@@ -43,16 +43,16 @@ Daftar Karyawan
         print(str(kasir["nomor"]) + " : " + kasir["nama"])
 
 
-def cari_kasir(nomor):
+def cari_kasir(nomor):  # mencari apakah kasir ada di produk
     kasir_ditemukan = False
-    kasir_bekerja = ""
+    kasir_bekerja = None
     for kasir in IdentitasKasir.daftar_kasir:
-        if nomor == kasir["nomor"]:
+        if nomor == kasir["nomor"]:  # apabila nomor kasir ada di daftar
             kasir_ditemukan = True
             kasir_bekerja = kasir["nama"]
             break
 
-    if kasir_ditemukan:
+    if kasir_ditemukan:  # apabila kasir ditemukan
         nomor_shift = int(input("Masukkan Nomor Shift: "))
         print("Kasir on-duty: " + kasir_bekerja)
         print("Shift: " + str(nomor_shift))
@@ -61,11 +61,11 @@ def cari_kasir(nomor):
         return False
 
 
-def menu_kasir():
+def menu_kasir():  # subprogram interface kasir
     tunjukkan_daftar_kasir()
     nomor_karyawan = int(input("Masukkan nomor karyawan: "))
     status = cari_kasir(nomor_karyawan)
-    while not status:
+    while status is False:  # jika kasir tidak ditemukan, status akan bernilai False
         nomor_karyawan = int(input("Nomor Karyawan tidak valid, coba lagi: "))
-        cari_kasir(nomor_karyawan)
+        status = cari_kasir(nomor_karyawan)
     return status
