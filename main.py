@@ -6,18 +6,48 @@ from transaksi_isi_pulsa import *
 from Checkout import Checkout
 from transaksi_topup import *
 
+import pandas as pd
+import time
+import os
+
 wishlist = []
 
 
-def scan_barang():  # pendefinisian interface scan barang
+def scan_barang():  # interface scan barang
+    # subprogram untuk mengecek apakah barang yang di-scan ada di wishlist
+    def barang_ada_di_wishlist(barang):
+        ditemukan = False
+        for benda in wishlist:
+            if benda["nama"] == barang["nama"]:
+                ditemukan = True
+                break
+        return ditemukan
+
+    # subprogram untuk mencari indeks barang apabila sudah ada di wishlist
+    def cari_indeks_barang_di_wishlist(properti, nilai):
+        for indeks, barang in wishlist:
+            if barang[properti] == nilai:
+                return indeks
+        return None
+
     barcode = int(input("Masukkan barcode barang: "))
     p = ProdukBelanja("", "", barcode)
-    produk_ditemukan = p.cari_produk()
-    if not produk_ditemukan:
+    produk_ditemukan = p.cari_produk()  # mencari barcode produk di katalog
+
+    if not produk_ditemukan:  # apabila barcode tidak ditemukan di katalog
         print("Barcode ini tidak ditemukan di katalog.")
-        scan_lagi()
-    else:
-        wishlist.append(produk_ditemukan)
+        scan_lagi()  # menawarkan untuk scan lagi
+    else:  # jika barcode barang ditemukan di katalog
+        jumlah_barang_dibeli = int(input("Berapa barang yang ingin dibeli?: "))
+        produk_ditemukan["jumlah"] = jumlah_barang_dibeli
+
+        if barang_ada_di_wishlist(produk_ditemukan):  # jika barang sudah ada di wishlist
+            # mencari indeks barang di wishlist
+            indeks_barang = cari_indeks_barang_di_wishlist("nama", produk_ditemukan["nama"])
+            wishlist[indeks_barang]["jumlah"] += jumlah_barang_dibeli  # menambahkan jumlah barang yang dibeli
+        else:  # jika barang belum ada di wishlist
+            wishlist.append(produk_ditemukan)
+
         scan_lagi()
 
 
@@ -28,9 +58,12 @@ def scan_lagi():  # penawaran untuk scan lagi
 
 
 def main():  # interface utama
-    c1 = Checkout(wishlist)
-    kasir = menu_kasir()  # menunjukkan menu kasir
-    c1.kasir_di_struk(kasir)  # menambahkan nama kasir di struk
+    def ambil_identitas_kasir():  # subprogram pengambilan identitas kasir
+        check = Checkout(wishlist)  # menambahkan wishlist ke class Checkout
+        kasir = menu_kasir()  # menunjukkan menu kasir
+        check.kasir_di_struk(kasir)  # menambahkan nama kasir di struk
+        return check
+    c1 = ambil_identitas_kasir()
 
     transaksi_selesai = False
     while not transaksi_selesai:  # looping selama user belum meminta checkout
@@ -51,6 +84,7 @@ def main():  # interface utama
     bayaran = c1.hitung_bayaran()  # menghitung total bayaran
     c1.terima_pembayaran(bayaran)  # meminta bayaran pelanggan
     c1.cetak_struk()  # mencetak struk
+
     selanjutnya = input("(P)elanggan selanjutnya atau (S)elesai?: ")   # konfirmasi transaksi selanjutnya
     if selanjutnya.upper() == "P":
         wishlist[:] = []
