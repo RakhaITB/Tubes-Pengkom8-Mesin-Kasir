@@ -80,6 +80,7 @@ def main():  # interface utama
     transaksi_selesai = False
     while not transaksi_selesai:  # looping selama user belum meminta checkout
         clear_screen()
+        c1.tunjukkan_keranjang()
         tunjukkan_daftar_menu()  # menunjukkan daftar menu transaksi
         jenis_menu = int(input("Masukkan transaksi yang diinginkan: "))
         while not 1 <= jenis_menu <= 5:  # jika pilihan menu tidak valid
@@ -96,6 +97,7 @@ def main():  # interface utama
 
     # user memilih checkout
     clear_screen()
+    c1.tunjukkan_keranjang()
     bayaran = c1.hitung_bayaran()  # menghitung total bayaran
     c1.terima_pembayaran(bayaran)  # meminta bayaran pelanggan
 

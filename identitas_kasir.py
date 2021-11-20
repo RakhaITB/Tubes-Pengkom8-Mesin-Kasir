@@ -54,7 +54,7 @@ def cari_kasir(nomor):  # mencari apakah kasir ada di produk
 
     if kasir_ditemukan:  # apabila kasir ditemukan
         nomor_shift = int(input("Masukkan momor shift: "))
-        print("Kasir on-duty: " + kasir_bekerja)
+        print("\nKasir on-duty: " + kasir_bekerja)
         print("Shift: " + str(nomor_shift))
         return kasir_bekerja
     else:

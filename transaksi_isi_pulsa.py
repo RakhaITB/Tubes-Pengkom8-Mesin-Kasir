@@ -81,19 +81,20 @@ def provider_isi_pulsa():
     jenis_provider = int(input("Masukkan nomor provider: "))
     prov = IsiPulsa("", jenis_provider)
     status = prov.cari_provider()
-    while not status:
+    while status is False:
         print("Provider tidak ditemukan.")
         status = isi_pulsa_lagi()
-    if status is not True:  # jika transaksi berhasil (fungsi cari provider menghasilkan item, bukan boolean
+
+    if status is True:
+        return None
+    else:  # jika transaksi berhasil, fungsi cari provider menghasilkan item, bukan boolean
         item["nama"] = "Pulsa " + status["nama"]
         item["harga"] = nominal_isi_pulsa()
         return item
-    else:
-        return None
 
 
 def isi_pulsa_lagi():
-    konfirmasi = input("Apakah Anda ingin mencoba memilih provider lagi? (Y/N) ")
+    konfirmasi = input("Apakah Anda ingin mencoba memilih provider lagi? (Y/N): ")
     if konfirmasi.upper() == "Y":
         provider_isi_pulsa()
     else:
@@ -106,7 +107,7 @@ def nominal_isi_pulsa():
     jenis_nominal = int(input("Masukkan jenis nominal yang ingin diisi: "))
     nom = IsiPulsa("", jenis_nominal)
     status = nom.cari_nominal()
-    while not status:
+    while status is False:
         print("ID nominal tidak valid.")
         status = nominal_isi_pulsa_lagi()
 
@@ -114,9 +115,9 @@ def nominal_isi_pulsa():
 
 
 def nominal_isi_pulsa_lagi():
-    konfirmasi = input("Apakah Anda ingin mencoba memilih jenis nominal lagi? (Y/N) ")
+    konfirmasi = input("Apakah Anda ingin mencoba memilih jenis nominal lagi? (Y/N): ")
     if konfirmasi.upper() == "Y":
-        nominal_isi_pulsa()
+        return nominal_isi_pulsa()
     else:
         return True
 

@@ -10,6 +10,16 @@ class ProdukBelanja:
             "nama": "Ultra Milk 210 ml",
             "harga": 6000,
             "barcode": 5678
+        },
+        {
+            "nama": "Ayam Gulai Krispy",
+            "harga": 40000,
+            "barcode": 6969
+        },
+        {
+            "nama": "Indomie Salted Egg 60 g",
+            "harga": 5000,
+            "barcode": 1984
         }
     ]
 

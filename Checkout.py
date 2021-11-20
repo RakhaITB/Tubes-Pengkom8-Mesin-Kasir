@@ -7,10 +7,6 @@ class Checkout:
     def tambahkan_barang_ke_keranjang(self, barang):
         self.keranjang.append(barang)
 
-    def tunjukkan_keranjang(self):
-        print("Keranjang:")
-        print(self.keranjang)
-
     def hitung_bayaran(self):
         bayaran_total = 0
         for produk in self.keranjang:
@@ -57,6 +53,15 @@ class Checkout:
 
     def kasir_di_struk(self, kasir):
         self.kasir = kasir
+
+    def tunjukkan_keranjang(self):
+        print("===== KERANJANG =====")
+        for benda in self.keranjang:
+            try:
+                print(benda["nama"] + " (jumlah: " + str(benda["jumlah"]) + ")" +
+                      " Rp" + str(benda["harga"] * benda["jumlah"]))
+            except KeyError:
+                print(benda["nama"] + " Rp" + str(benda["harga"]))
 
     def cetak_struk(self):
         print("\n====== STRUK ======")
