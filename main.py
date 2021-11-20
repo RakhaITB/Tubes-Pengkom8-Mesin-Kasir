@@ -1,16 +1,31 @@
 
-from identitas_kasir import *
-from transaksi import *
-from transaksi_belanja import ProdukBelanja
-from transaksi_isi_pulsa import *
-from Checkout import Checkout
-from transaksi_topup import *
+from identitas_kasir import *  # file untuk kegunaan mencatat identitas kasir yang bekerja
+from transaksi import *  # file untuk menunjukkan menu transaksi yang tersedia
+from transaksi_belanja import ProdukBelanja  # file yang menyimpan data produk
+from transaksi_isi_pulsa import *  # file untuk kegunaan transaksi isi pulsa
+from transaksi_topup import *  # file untuk kegunaan transaksi top-up
+from Checkout import Checkout  # file untuk kegunaan interface checkout
+import analisis_data  # file untuk mendefinisikan metode untuk mengolah data pemasukan
 
-import pandas as pd
-import time
-import os
+from os import system, name  # modul untuk memakai perintah system('cls')
 
 wishlist = []
+
+
+def clear_screen():  # fungsi untuk membersihkan terminal
+    if name == 'nt':  # jika pengguna memakai OS Windows
+        system('cls')
+    else:  # jika bukan OS Windows (Mac, Linux)
+        system('clear')
+
+
+def ambil_identitas_kasir():  # subprogram pengambilan identitas kasir
+    kasir_pilihan = menu_kasir()  # menunjukkan menu kasir
+    input("Tekan ENTER untuk melanjutkan")
+    return kasir_pilihan
+
+
+kasir_on_duty = ambil_identitas_kasir()
 
 
 def scan_barang():  # interface scan barang
@@ -58,18 +73,16 @@ def scan_lagi():  # penawaran untuk scan lagi
 
 
 def main():  # interface utama
-    def ambil_identitas_kasir():  # subprogram pengambilan identitas kasir
-        check = Checkout(wishlist)  # menambahkan wishlist ke class Checkout
-        kasir = menu_kasir()  # menunjukkan menu kasir
-        check.kasir_di_struk(kasir)  # menambahkan nama kasir di struk
-        return check
-    c1 = ambil_identitas_kasir()
+    c1 = Checkout(wishlist)  # menambahkan wishlist ke class Checkout
+    c1.kasir_di_struk(kasir_on_duty)  # menambahkan kasir ke struk
+    analisis_data.pelanggan_hari_ini += 1
 
     transaksi_selesai = False
     while not transaksi_selesai:  # looping selama user belum meminta checkout
+        clear_screen()
         tunjukkan_daftar_menu()  # menunjukkan daftar menu transaksi
         jenis_menu = int(input("Masukkan transaksi yang diinginkan: "))
-        while jenis_menu not in [i for i in range(1, 5)]:  # meminta ulang input jika tidak valid
+        while not 1 <= jenis_menu <= 5:  # jika pilihan menu tidak valid
             jenis_menu = int(input("Kode transaksi tidak valid. Coba lagi: "))
 
         if jenis_menu == 1:  # pilihan belanja
@@ -81,15 +94,22 @@ def main():  # interface utama
         elif jenis_menu == 4:  # pilihan checkout
             transaksi_selesai = True
 
+    # user memilih checkout
+    clear_screen()
     bayaran = c1.hitung_bayaran()  # menghitung total bayaran
     c1.terima_pembayaran(bayaran)  # meminta bayaran pelanggan
+
+    clear_screen()
     c1.cetak_struk()  # mencetak struk
+
+    analisis_data.pemasukan_hari_ini += c1.pemasukan_sesi_ini()  # memperbarui pemasukan ke file analisis_data
 
     selanjutnya = input("(P)elanggan selanjutnya atau (S)elesai?: ")   # konfirmasi transaksi selanjutnya
     if selanjutnya.upper() == "P":
-        wishlist[:] = []
+        wishlist[:] = []  # mengosongkan wishlist
         main()  # mengulang proses transaksi
     else:
+        analisis_data.update_data()  # memperbarui file data_penghasilan.csv
         exit()  # menghentikan program
 
 

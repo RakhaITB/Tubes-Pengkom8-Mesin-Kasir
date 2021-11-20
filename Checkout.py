@@ -14,7 +14,10 @@ class Checkout:
     def hitung_bayaran(self):
         bayaran_total = 0
         for produk in self.keranjang:
-            bayaran_total += produk["harga"] * produk["jumlah"]
+            try:  # jika barang memiliki kunci "jumlah", yakni benda dari kelas ProdukBelanja
+                bayaran_total += produk["harga"] * produk["jumlah"]
+            except KeyError:  # jika barang dari kelas IsiPulsa atau TopUp, maka tidak ada kunci "jumlah"
+                bayaran_total += produk["harga"]
         self.sisa_bayaran += bayaran_total
         return self.sisa_bayaran
 
@@ -29,7 +32,7 @@ class Checkout:
         sisa_yang_harus_dibayar = True
         total_yang_harus_dibayar = jumlah_yang_harus_dibayar
 
-        print("Total: " + str(total_yang_harus_dibayar))
+        print("Total: Rp" + str(total_yang_harus_dibayar))
         while sisa_yang_harus_dibayar:
             try:
                 terbayar = float(input("\nMasukkan jumlah yang akan dibayar: "))
@@ -56,14 +59,21 @@ class Checkout:
         self.kasir = kasir
 
     def cetak_struk(self):
-        print("\n====== STRUK ======\n")
-        print("Kasir: " + self.kasir + "\n")
+        print("\n====== STRUK ======")
+        print("Kasir: " + self.kasir)
+        print("===================")
 
         for benda in self.keranjang:
-            print(benda["nama"] + " (jumlah: " + str(benda["jumlah"]) + ")",
-                  "Rp" + str(benda["harga"] * benda["jumlah"]))
+            try:
+                print(benda["nama"] + " (jumlah: " + str(benda["jumlah"]) + ")" +
+                      " Rp" + str(benda["harga"] * benda["jumlah"]))
+            except KeyError:
+                print(benda["nama"] + " Rp" + str(benda["harga"]))
 
         print("\n")
         print("TOTAL:", "          Rp" + str(self.sisa_bayaran))
         print("DITERIMA:", "       Rp" + str(self.bayaran_pelanggan))
         print("KEMBALIAN:", "      Rp" + str(self.kembalian))
+
+    def pemasukan_sesi_ini(self):
+        return self.sisa_bayaran

@@ -19,7 +19,7 @@ daftar_jenis_transaksi = [
 ]
 
 
-def tunjukkan_daftar_menu():
+def tunjukkan_daftar_menu():  # menunjukkan daftar transaksi yang tersedia
     print("""============================================
 Daftar Transaksi
 --------------------------------------------""")

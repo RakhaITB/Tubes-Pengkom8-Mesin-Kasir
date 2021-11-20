@@ -23,7 +23,7 @@ class ProdukBelanja:
 
     def cari_produk(self):
         ditemukan = False
-        produk_yang_ditemukan = {}
+        produk_yang_ditemukan = None
         for produk in self.daftar_produk:
             if self.barcode == produk["barcode"]:
                 produk_yang_ditemukan = {"nama": produk["nama"], "barcode": produk["barcode"], "harga": produk["harga"]}
