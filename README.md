@@ -8,4 +8,4 @@ GUIDE:
 - Daftar produk dapat disunting melalui file transaksi_belanja.py
 - Daftar provider pulsa dan pilihan nominalnya dapat disunting melalui file transaksi_belanja.py
 - Daftar pilihan top-up dapat disunting melalui file transaksi_topup.py
-- Database tanggal dan penghasilan disimpan di dalam file data_penghasilan.csv
+- File-file CSV yang menyimpan data disimpan di folder 'database'
