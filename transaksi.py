@@ -13,7 +13,7 @@ daftar_jenis_transaksi = [
         "nomor": 3
     },
     {
-        "nama": "Checkout",
+        "nama": "Selesai",
         "nomor": 4
     }
 ]

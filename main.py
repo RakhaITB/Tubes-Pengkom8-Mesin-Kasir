@@ -9,7 +9,7 @@ import analisis_data  # file untuk mendefinisikan metode untuk mengolah data pem
 
 from os import system, name  # modul untuk memakai perintah system('cls')
 
-wishlist = []
+wishlist = []  # wishlist yang menyimpan daftar barang
 
 
 def clear_screen():  # fungsi untuk membersihkan terminal
@@ -23,9 +23,6 @@ def ambil_identitas_kasir():  # subprogram pengambilan identitas kasir
     kasir_pilihan = menu_kasir()  # menunjukkan menu kasir
     input("Tekan ENTER untuk melanjutkan")
     return kasir_pilihan
-
-
-kasir_on_duty = ambil_identitas_kasir()
 
 
 def scan_barang():  # interface scan barang
@@ -73,26 +70,26 @@ def scan_lagi():  # penawaran untuk scan lagi
 
 
 def main():  # interface utama
-    c1 = Checkout(wishlist)  # menambahkan wishlist ke class Checkout
-    c1.kasir_di_struk(kasir_on_duty)  # menambahkan kasir ke struk
+    # menambahkan wishlist, tanggal, dan kasir ke class Checkout
+    c1 = Checkout(wishlist, analisis_data.tanggal_hari_ini, kasir_on_duty)
     analisis_data.pelanggan_hari_ini += 1
 
     transaksi_selesai = False
     while not transaksi_selesai:  # looping selama user belum meminta checkout
         clear_screen()
-        c1.tunjukkan_keranjang()
+        c1.tunjukkan_keranjang()  # menunjukkan keranjang
         tunjukkan_daftar_menu()  # menunjukkan daftar menu transaksi
         jenis_menu = int(input("Masukkan transaksi yang diinginkan: "))
-        while not 1 <= jenis_menu <= 5:  # jika pilihan menu tidak valid
+        while not ((1 <= jenis_menu <= 5) or None):  # jika pilihan menu tidak valid
             jenis_menu = int(input("Kode transaksi tidak valid. Coba lagi: "))
 
         if jenis_menu == 1:  # pilihan belanja
             scan_barang()
         elif jenis_menu == 2:  # pilihan isi pulsa
             wishlist.append(menu_isi_pulsa())
-        elif jenis_menu == 3:  # pilihan topup
+        elif jenis_menu == 3:  # pilihan topupfj
             wishlist.append(menu_topup())
-        elif jenis_menu == 4:  # pilihan checkout
+        else:  # pilihan checkout
             transaksi_selesai = True
 
     # user memilih checkout
@@ -115,4 +112,39 @@ def main():  # interface utama
         exit()  # menghentikan program
 
 
-main()
+def lihat_statistik():
+    print("Statistik mana yang ingin Anda lihat?\n"
+          "[1] Statistik pemasukan\n"
+          "[2] Statistik jumlah pelanggan\n"
+          "[3] Kembali ke menu sebelumnya")
+    pilihan_stat = int(input("Silahkan pilih menu: "))
+
+    if pilihan_stat == 1:
+        analisis_data.tunjukkan_plot_penghasilan()  # menunjukkan plot pemasukan
+    elif pilihan_stat == 2:
+        analisis_data.tunjukkan_plot_pelanggan()  # menunjukkan plot jumlah pelanggan
+    else:
+        return False
+
+
+# OUTPUT
+while True:  # mengulang program sampai user memilih transaksi atau sudah memilih statistik yang dilihat
+    clear_screen()
+    print("Selamat datang! Apa yang ingin Anda lakukan?\n"
+          "[1] Transaksi\n"
+          "[2] Lihat statistik")
+    pilihan = int(input("Silahkan pilih menu: "))
+    while not (pilihan == 1 or pilihan == 2):
+        pilihan = int(input("Pilihan tidak valid, coba lagi: "))
+
+    if pilihan == 1:
+        clear_screen()
+        kasir_on_duty = ambil_identitas_kasir()  # mengambil identitas kasir yang bekerja
+        main()  # menunjukkan interface utama
+    else:
+        clear_screen()
+        output = lihat_statistik()  # menunjukkan menu statistik
+        if output is False:
+            continue  # kembali ke daftar menu sebelumnya
+        else:
+            exit()  # program selesai

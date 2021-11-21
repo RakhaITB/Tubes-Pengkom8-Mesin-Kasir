@@ -96,7 +96,7 @@ def provider_isi_pulsa():
 def isi_pulsa_lagi():
     konfirmasi = input("Apakah Anda ingin mencoba memilih provider lagi? (Y/N): ")
     if konfirmasi.upper() == "Y":
-        provider_isi_pulsa()
+        return provider_isi_pulsa()
     else:
         return True
 
@@ -110,7 +110,6 @@ def nominal_isi_pulsa():
     while status is False:
         print("ID nominal tidak valid.")
         status = nominal_isi_pulsa_lagi()
-
     return status
 
 

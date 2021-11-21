@@ -1,8 +1,10 @@
 
 class Checkout:
-    def __init__(self, keranjang, sisa_bayaran=0):
+    def __init__(self, keranjang, tanggal, kasir, sisa_bayaran=0):
         self.keranjang = keranjang
         self.sisa_bayaran = sisa_bayaran
+        self.tanggal = tanggal
+        self.kasir = kasir
 
     def tambahkan_barang_ke_keranjang(self, barang):
         self.keranjang.append(barang)
@@ -51,21 +53,28 @@ class Checkout:
             except ValueError:
                 print("Masukkan angka yang valid!")
 
-    def kasir_di_struk(self, kasir):
-        self.kasir = kasir
+    def rapikan_keranjang(self):
+        for benda in self.keranjang:
+            try:
+                if benda["jumlah"] == 0:
+                    self.keranjang.remove(benda)
+            except KeyError or TypeError:
+                continue
 
     def tunjukkan_keranjang(self):
         print("===== KERANJANG =====")
+        self.rapikan_keranjang()
         for benda in self.keranjang:
             try:
                 print(benda["nama"] + " (jumlah: " + str(benda["jumlah"]) + ")" +
                       " Rp" + str(benda["harga"] * benda["jumlah"]))
-            except KeyError:
+            except KeyError or TypeError:
                 print(benda["nama"] + " Rp" + str(benda["harga"]))
 
     def cetak_struk(self):
         print("\n====== STRUK ======")
         print("Kasir: " + self.kasir)
+        print("Tanggal: " + str(self.tanggal))
         print("===================")
 
         for benda in self.keranjang:
